@@ -1,0 +1,26 @@
+/* mid.midicn.com · 站点专属样式（叠加在 style.css 之上；style.css 为 lib 复制件勿改） */
+
+/* 维度值芯片（index.html） */
+.vals{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 26px}
+.val{border:1px solid var(--rule-2);border-radius:var(--r);padding:6px 12px;color:var(--paper);
+     font-size:var(--fs-13)}
+.val:hover{border-color:var(--vermilion);color:var(--vermilion)}
+.val .cnt{margin-left:8px;font-family:var(--mono);font-size:var(--fs-11);color:var(--paper-3)}
+.filterbox{margin:0}
+.filterbox input{width:100%;max-width:420px;background:var(--ink-2);border:1px solid var(--rule-2);
+  border-radius:var(--r);color:var(--paper);padding:9px 12px;font-size:var(--fs-14)}
+.filterbox input:focus{outline:none;border-color:var(--vermilion)}
+
+/* 维度行（dim.html） */
+.dimrow{display:flex;gap:12px;align-items:baseline;justify-content:space-between;
+  padding:9px 0;border-bottom:1px solid var(--rule)}
+.dr-main{min-width:0}
+.dr-t{color:var(--paper);text-decoration:none}
+.dr-t:hover{color:var(--vermilion)}
+.dr-sub{display:block;font-family:var(--mono);font-size:var(--fs-11);color:var(--paper-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dr-side{flex:none;display:flex;gap:12px;align-items:center}
+.dr-dl{color:var(--slate);font-size:var(--fs-13);text-decoration:none;white-space:nowrap}
+.dr-dl:hover{color:var(--vermilion)}
+.tiers{display:flex;gap:14px;align-items:center;margin:6px 0 2px}
+.crumbs a{color:var(--dim)}

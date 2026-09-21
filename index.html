@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>按维度浏览 · mid.midicn.com</title>
+<meta name="description" content="midicn-lib 124,179 首 MIDI 的维度浏览实验站：按作曲家、中国民歌分省、流派、时期、乐器、来源六种方式浏览。">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header><div class="hbar">
+  <a class="brand" href="./">MIDI 维度 <b>mid</b><i>.midicn.com</i></a>
+  <nav class="nav">
+    <a href="https://lib.midicn.com/" target="_blank" rel="noopener">音乐库</a>
+    <a href="https://lib.midicn.com/download.html" target="_blank" rel="noopener">数据下载</a>
+    <a href="https://lib.midicn.com/provenance.html" target="_blank" rel="noopener">来源台账</a>
+  </nav>
+</div></header>
+
+<main class="doc wide">
+  <p class="meta">实验版 · 数据随 midi-lib Release 现场生成 · <span id="ver"></span></p>
+  <h1>按维度浏览</h1>
+  <p class="lede">同一份 124,179 首曲目的另一种打开方式：按作曲家、中国民歌分省、流派、时期、乐器、来源六种维度组织。行内「详情 / 播放」与「下载」经由 lib.midicn.com 提供。</p>
+  <div id="app"><p class="meta">加载中…</p></div>
+</main>
+
+<footer><div class="wrap">
+  <div class="fbar">
+    <b>midicn-lib</b>
+    <nav class="fnav">
+      <a href="https://lib.midicn.com/" target="_blank" rel="noopener">音乐库</a>
+      <a href="https://lib.midicn.com/download.html" target="_blank" rel="noopener">数据下载</a>
+      <a href="https://lib.midicn.com/provenance.html" target="_blank" rel="noopener">来源台账</a>
+      <a href="https://github.com/midicn/midi-lib" target="_blank" rel="noopener">数据仓库</a>
+    </nav>
+    <span class="flic" id="footLic"></span>
+  </div>
+  <div class="fnote"><span>维度浏览实验站 · 数据与文件由 midicn-lib 提供</span><span>素材依各来源许可</span></div>
+</div></footer>
+
+<script src="assets/site.js"></script>
+<script>
+(function(){
+  const app = document.getElementById('app');
+  fetchT('data/dims/index.json').then(idx => {
+    if (idx.version) document.getElementById('ver').textContent = '数据版本 ' + idx.version;
+    const dims = idx.dims;
+    const order = DIMS_ORDER.filter(d => dims[d]);
+    app.innerHTML = order.map(d => {
+      const v = dims[d];
+      const listId = 'list-' + d;
+      const big = v.values.length > 300;
+      return '<div class="stitle"><h2>' + esc(v.label) + '</h2>' +
+        '<span class="spacer"></span><span class="meta">' + v.values.length + ' 项 · ' +
+        fmtNum(v.tracks) + ' 首</span></div>' +
+        (d === 'composer' ? '<p class="meta">输入可过滤（共 ' + v.values.length + ' 位）</p>' +
+          '<p class="filterbox"><input id="cf" type="search" placeholder="过滤作曲家…"></p>' : '') +
+        '<div class="vals" id="' + listId + '"' + (big ? ' data-big="1"' : '') + '></div>';
+    }).join('');
+
+    order.forEach(d => {
+      const v = dims[d];
+      const el = document.getElementById('list-' + d);
+      const chip = x => '<a class="val" href="dim.html?d=' + encodeURIComponent(d) +
+        '&s=' + encodeURIComponent(x.k) + '">' + esc(x.label) +
+        '<span class="cnt">' + fmtNum(x.count) + '</span></a>';
+      if (d === 'composer') {
+        const input = document.getElementById('cf');
+        const draw = q => {
+          const qq = (q || '').trim().toLowerCase();
+          const hit = v.values.filter(x => !qq || x.label.toLowerCase().includes(qq) || x.k.includes(qq));
+          el.innerHTML = hit.slice(0, 200).map(chip).join('') ||
+            '<span class="meta">无匹配</span>';
+          if (hit.length > 200) el.insertAdjacentHTML('beforeend',
+            '<span class="meta">…仅显示前 200 / ' + hit.length + '，请继续输入缩小范围</span>');
+        };
+        input.addEventListener('input', () => draw(input.value));
+        draw('');
+      } else {
+        el.innerHTML = v.values.map(chip).join('');
+      }
+    });
+  }).catch(e => showErr(app, e.message || e));
+
+  function fmtNum(n){ return Number(n).toLocaleString('en-US'); }
+})();
+</script>
+</body>
+</html>

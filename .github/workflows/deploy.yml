@@ -1,0 +1,64 @@
+name: Deploy mid site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  RELEASE_TAG: v1.19
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download meta package from midi-lib Release
+        run: |
+          curl -sL --retry 3 -o meta.zip \
+            "https://github.com/midicn/midi-lib/releases/download/${RELEASE_TAG}/midicn-lib-${RELEASE_TAG}-meta.zip"
+          python3 - <<'PY'
+          import zipfile, os
+          os.makedirs('meta', exist_ok=True)
+          got = []
+          with zipfile.ZipFile('meta.zip') as z:
+              for n in z.namelist():
+                  if n.endswith('.json') and '/meta/' in n:
+                      dest = os.path.join('meta', os.path.basename(n))
+                      with z.open(n) as src, open(dest, 'wb') as out:
+                          out.write(src.read())
+                      got.append(os.path.basename(n))
+          print('meta files:', sorted(got))
+          if 'catalog.json' not in got:
+              raise SystemExit('meta 包中缺少 catalog.json')
+          PY
+          rm -f meta.zip
+
+      - name: Generate dimension shards
+        run: python3 tools/gen_dims.py --meta meta --out .
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

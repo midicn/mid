@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>维度浏览 · mid.midicn.com</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header><div class="hbar">
+  <a class="brand" href="./">MIDI 维度 <b>mid</b><i>.midicn.com</i></a>
+  <nav class="nav">
+    <a href="./">维度总览</a>
+    <a href="https://lib.midicn.com/" target="_blank" rel="noopener">音乐库</a>
+    <a href="https://lib.midicn.com/provenance.html" target="_blank" rel="noopener">来源台账</a>
+  </nav>
+</div></header>
+
+<main class="doc wide">
+  <p class="crumbs meta"><a href="./">维度总览</a> / <span id="crumb">…</span></p>
+  <h1 id="h">…</h1>
+  <div id="agg"></div>
+  <div id="c3"></div>
+  <p class="meta" id="cnt"></p>
+  <div id="rows"></div>
+  <p><button id="more" class="btn ghost" hidden>加载全部</button></p>
+</main>
+
+<footer><div class="wrap">
+  <div class="fbar">
+    <b>midicn-lib</b>
+    <nav class="fnav">
+      <a href="./">维度总览</a>
+      <a href="https://lib.midicn.com/" target="_blank" rel="noopener">音乐库</a>
+      <a href="https://lib.midicn.com/provenance.html" target="_blank" rel="noopener">来源台账</a>
+      <a href="https://github.com/midicn/midi-lib" target="_blank" rel="noopener">数据仓库</a>
+    </nav>
+    <span class="flic"></span>
+  </div>
+  <div class="fnote"><span>维度浏览实验站 · 数据与文件由 midicn-lib 提供</span><span>素材依各来源许可</span></div>
+</div></footer>
+
+<script src="assets/site.js"></script>
+<script>
+(function(){
+  const qs = new URLSearchParams(location.search);
+  const d = qs.get('d'), s = qs.get('s');
+  const h = document.getElementById('h'), crumb = document.getElementById('crumb');
+  const agg = document.getElementById('agg'), c3el = document.getElementById('c3');
+  const rowsEl = document.getElementById('rows'), cntEl = document.getElementById('cnt');
+  const moreBtn = document.getElementById('more');
+  const fail = m => { h.textContent = '无法渲染'; showErr(document.getElementById('agg'), m); };
+
+  if (!d || !s) { fail('缺少参数：需要 ?d=<维度>&s=<值>'); return; }
+  if (DIMS_ORDER.indexOf(d) < 0) { fail('未知维度：' + d); return; }
+
+  crumb.textContent = DIM_LABEL[d] || d;
+
+  fetchT('data/dims/index.json').then(idx => {
+    const dim = idx.dims[d];
+    if (!dim) throw new Error('维度不存在：' + d);
+    const val = dim.values.find(v => v.k === s);
+    const label = val ? val.label : s;
+    h.innerHTML = esc(label) +
+      ' <span class="lic" style="font-size:var(--fs-14)">' + esc(DIM_LABEL[d]) + '</span>';
+    document.title = label + ' · ' + (DIM_LABEL[d] || d) + ' · mid.midicn.com';
+
+    /* 作曲家 slug → 显示名（供非 composer 维度的行内作曲家列） */
+    const compNames = new Map((idx.dims.composer ? idx.dims.composer.values : [])
+      .map(v => [v.k, v.label]));
+
+    return fetchT(shardUrl(d, s)).then(sh => {
+      const rows = sh.rows || [];
+      const aggT = tierAgg(rows);
+      agg.innerHTML = '<span class="meta">' +
+        ['C1','C2','C3'].map(c => {
+          const t = tierOf(c === 'C1' ? 'main' : c === 'C2' ? 'piano-special' : 'study');
+          return '<span class="lic ' + t.cls + '">' + c + '</span> ' + aggT[c] + ' 首';
+        }).join(' · ') + '</span>';
+      c3el.innerHTML = aggT.C3 > 0
+        ? '<div class="note">本页含<b>学习研究（C3）</b>曲目 ' + aggT.C3 +
+          ' 首：仅供学习与研究，不得再分发、不得商用。</div>' : '';
+      cntEl.textContent = '共 ' + rows.length.toLocaleString('en-US') + ' 首';
+
+      const draw = (limit) => {
+        rowsEl.innerHTML = rows.slice(0, limit).map(r => rowHTML(r, compNames)).join('');
+        moreBtn.hidden = rows.length <= limit;
+        moreBtn.textContent = '加载全部（共 ' + rows.length.toLocaleString('en-US') + ' 首，当前显示 ' +
+          Math.min(limit, rows.length).toLocaleString('en-US') + '）';
+      };
+      let shown = 1000;
+      draw(shown);
+      moreBtn.onclick = () => { shown = rows.length; draw(shown); };
+    });
+  }).catch(e => fail(e.message || e));
+})();
+</script>
+</body>
+</html>
