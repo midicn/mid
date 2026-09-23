@@ -75,7 +75,8 @@ function dimValueLabel(d, k) {
 /* 行 HTML（dim.html 用） */
 function rowHTML(row, compNames) {
   const title = esc(row.t || row.cn || row.id);
-  const comp = esc((compNames && compNames.get(row.c)) || row.c || '');
+  // v1.23：catalog 新增 cnzh（作曲家中文名）→ 中文界面优先用它
+  const comp = esc(row.cnzh || (compNames && compNames.get(row.c)) || row.c || '');
   const dur = fmtDur(row.du);
   const tier = tierOf(row.z);
   return '<div class="dimrow">' +

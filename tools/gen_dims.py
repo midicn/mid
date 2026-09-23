@@ -33,7 +33,10 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 CHUNK = 2000                    # 单分片行上限（超过则 <key>-<n>.json 二级切分）
-SLIM = ('id', 't', 'cn', 'du', 'l', 'z', 'f', 'c')
+# 分片保留字段。v1.23 起 catalog 多出 cnzh（作曲家中文名）等字段，
+# 这里同步纳入 cnzh —— 中文用户先看到中文作曲家名。其余新字段（perf/alb/wk/vt）
+# 属于 lib 详情页的演奏版语境，维度浏览不需要，故不入 SLIM 以控制分片体积。
+SLIM = ('id', 't', 'cn', 'cnzh', 'du', 'l', 'z', 'f', 'c')
 Z_TIER = {'main': 'C1', 'piano-special': 'C2', 'study': 'C3'}
 
 # chinafolk 的 r 白名单（11 个中文省名，实测无杂质）

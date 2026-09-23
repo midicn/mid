@@ -1,7 +1,7 @@
 # mid.midicn.com · 维度浏览实验站
 
 按「作曲家 / 中国民歌分省 / 流派 / 时期 / 乐器 / 来源」六种维度浏览
-[midicn-lib](https://github.com/midicn/midi-lib) 的 **124,179** 首 MIDI。实验性质。
+[midicn-lib](https://github.com/midicn/midi-lib) 的 **133,670** 首 MIDI。实验性质。
 
 - 音乐库（播放 / 详情 / 使用方式分包下载）：<https://lib.midicn.com>
 - 来源台账（每个地址的取得方式与校验值）：<https://lib.midicn.com/provenance.html>
@@ -16,7 +16,7 @@
 ## 数据机制（仓库不含数据）
 
 部署工作流从 midi-lib 的 Release 下载 `midicn-lib-<VER>-meta.zip`（官方目录
-`catalog.json`，124,179 条）→ 现场运行 [`tools/gen_dims.py`](tools/gen_dims.py)
+`catalog.json`，133,670 条）→ 现场运行 [`tools/gen_dims.py`](tools/gen_dims.py)
 切出维度分片（`data/dims/…`）→ 部署 GitHub Pages。lib 发新版本后，改本仓
 `deploy.yml` 顶部 `RELEASE_TAG` 重新部署即自动跟随。
 
