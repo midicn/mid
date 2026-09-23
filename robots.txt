@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /detail.html
+
+Sitemap: https://mid.midicn.com/sitemap.xml
