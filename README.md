@@ -1,7 +1,7 @@
 # mid.midicn.com · 维度浏览实验站
 
 按「作曲家 / 中国民歌分省 / 流派 / 时期 / 乐器 / 来源」六种维度浏览
-[midicn-lib](https://github.com/midicn/midi-lib) 的 **133,670** 首 MIDI。实验性质。
+[midicn-lib](https://github.com/midicn/midi-library) 的 **133,670** 首 MIDI。实验性质。
 
 - 音乐库（播放 / 详情 / 使用方式分包下载）：<https://lib.midicn.com>
 - 来源台账（每个地址的取得方式与校验值）：<https://lib.midicn.com/provenance.html>

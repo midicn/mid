@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  GITHUB_REPO: midicn/midi-lib
+  GITHUB_REPO: midicn/midi-library
 
 jobs:
   deploy:
@@ -28,7 +28,7 @@ jobs:
 
       - name: "Resolve release tag (single source: meta/version.json)"
         run: |
-          TAG=$(curl -sL --retry 3 "https://raw.githubusercontent.com/midicn/midi-lib/main/meta/version.json" | python3 -c "import sys,json;print(json.load(sys.stdin)['version'])")
+          TAG=$(curl -sL --retry 3 "https://raw.githubusercontent.com/midicn/midi-library/main/meta/version.json" | python3 -c "import sys,json;print(json.load(sys.stdin)['version'])")
           if [ -z "$TAG" ]; then echo "version.json 未取到版本号"; exit 1; fi
           echo "RELEASE_TAG=$TAG" >> "$GITHUB_ENV"
           echo "RELEASE_TAG=$TAG"
@@ -36,7 +36,7 @@ jobs:
       - name: Download meta package from midi-lib Release
         run: |
           curl -sL --retry 3 -o meta.zip \
-            "https://github.com/midicn/midi-lib/releases/download/${RELEASE_TAG}/midicn-lib-${RELEASE_TAG}-meta.zip"
+            "https://github.com/midicn/midi-library/releases/download/${RELEASE_TAG}/midicn-lib-${RELEASE_TAG}-meta.zip"
           python3 - <<'PY'
           import zipfile, os
           os.makedirs('meta', exist_ok=True)
