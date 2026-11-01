@@ -61,6 +61,12 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
 
+      - name: Drop repo-only docs from the published tree
+        # 本仓的 README.md 是给 GitHub 看的；`path: .` 会把它一并发成网页，
+        # 于是 /README.md 是一个没有导航与 canonical 的重复页（线上审计判为泄漏）。
+        # 只删 runner 里的这份，仓库里那篇不动。
+        run: rm -f README.md DATA-STRUCTURE.md
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
