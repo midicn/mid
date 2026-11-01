@@ -1,5 +1,5 @@
-var VER = 'midicn-0.9.1-c6ea4b484acc';
-var PRECACHE = ["/", "/assets/core/icons/icon-192.38fcdb520a.png", "/assets/core/midicn.b90ec5466f.css", "/assets/core/shell.c2a2657b7b.js", "/assets/core/theme.2effc39d25.js", "/assets/core/v6-data.b4d0081a6b.css", "/manifest.json"];
+var VER = 'midicn-1.0.0-a91e28967c17';
+var PRECACHE = ["/", "/404.html", "/assets/ui/base.becef00409d6.css", "/assets/ui/runtime.1a1670d40bb4.js"];
 /* midicn shared offline worker. Generated constants are prepended by install_core. */
 var PAGE_CACHE = VER + '-pages';
 var PAGE_LIMIT = 80;
@@ -19,7 +19,7 @@ self.addEventListener('install', function (event) {
   event.waitUntil(Promise.all(PRECACHE.map(async function (url) {
     try { await remember(VER, url, await fetch(url, {cache: 'reload'})); }
     catch (_) { /* A transient failure must not prevent offline installation. */ }
-  })).then(function () { return self.skipWaiting(); }));
+  })).then(function () { return undefined; }));
 });
 
 self.addEventListener('activate', function (event) {
