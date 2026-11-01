@@ -1,0 +1,37 @@
+{
+  "baseline": "b-baseline-20261101-155654",
+  "build": "b-1.0.0-20261101-final-bootstrap",
+  "core": "0.9.1",
+  "external_archives": [
+    {
+      "bytes": 459016473,
+      "file": "midicn-midi-v1.23-web-r1-mid.zip",
+      "prefixes": [
+        "midi/",
+        "data/midi/v1.23-web-r1/"
+      ],
+      "sha256": "d895d6d9a918191d1699a22f93271aec1cf04468188ed15f811eb013686ff81d",
+      "url": "https://github.com/midicn/midi-library/releases/download/v1.23-web-r1/midicn-midi-v1.23-web-r1-mid.zip"
+    }
+  ],
+  "files": 72379,
+  "host": "mid.midicn.com",
+  "manifest_sha256": "26bdbc59627394c8fe2c5c570e903e12fdb7065985bbc9819876d1ebab798ac2",
+  "material_version": "v1.23-web-r1",
+  "payload_bytes": 768736622,
+  "schema": 1,
+  "site": "mid",
+  "stage": "bootstrap",
+  "ui": "verified-baseline",
+  "live_compatibility": {
+    "head": "57fd98af3f16da9f666dcbdad642cb76b253c1e4",
+    "additional_assets": [
+      "assets/core/midicn.748e2e1b77.css",
+      "assets/core/shell.dbc1c8e294.js",
+      "assets/core/theme.8087c75b5a.js",
+      "assets/shell.js"
+    ],
+    "retain_days_after_deployment": 7,
+    "minimum_batches": 2
+  }
+}
