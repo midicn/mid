@@ -1,5 +1,6 @@
 /* mid.midicn.com · 站点逻辑（实验版 · 纯中文）
-   依赖：assets/style.css（复制自 lib.midicn.com，自包含）。
+   样式：assets/core/midicn.css + assets/core/v6-data.css + assets/site.css（本站专属）。
+   顶栏／页脚／底栏由内核给，这里不再自备任何副本。
    链接约定：详情/播放 → lib.midicn.com/detail.html?id=…（自带播放器与 loc.json 兜底）
              下载     → lib.midicn.com/<f>（.mid 文件直链，实测可下） */
 'use strict';
