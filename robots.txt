@@ -22,4 +22,4 @@ User-agent: Claude-SearchBot
 Disallow: /
 Allow: /llms.txt
 
-Sitemap: https://mid.midicn.com/sitemap.xml
+Sitemap: https://midi.midicn.com/sitemap.xml
